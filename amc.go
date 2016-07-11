@@ -1,12 +1,11 @@
 package main
 
-import (
-   "fmt"
-)
+// import (
+// )
 
 
 func main(){
-   // fmt.Println("ok")
+
    // TODO:
    // 
    // 0. get list of configs
@@ -16,7 +15,6 @@ func main(){
    // 1. git diff between clusters
    // 
    //        amc cdiff --clusters-list UAT,PROD --configs-list HDFS,HIVE       
-   // 
    // 
    // 2. find changes for selected variable(s)
    // 
@@ -29,4 +27,6 @@ func main(){
    // 
    // 4. ?
    // 
+
+   info("Completed. OK!")
 }
