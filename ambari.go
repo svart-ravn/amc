@@ -8,14 +8,6 @@ import (
 )
 
 
-type Cluster struct{
-   AmbariUrl string
-   AmbariPassword string
-   AmbariUser string
-   Name string
-}
-
-
 // ------------------------------------------------------------------------------------------
 func request(cl Cluster, url string) ([]byte){
    // log.Debug("sending request: ", cluster.AmbariUrl + url)
