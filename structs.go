@@ -16,6 +16,7 @@ type Cluster struct{
 
 
 type CommandLineParameters struct{
+   Action string
    ConfigFile string
    MatchingPatterns string
    OutputFolder string

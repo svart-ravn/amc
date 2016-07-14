@@ -28,7 +28,7 @@ func parse_arguments(){
 
    flag.StringVar(&cmdParameters.ClustersFilter, "clusters", "*", "list of clusters")
 
-   flag.StringVar(&cmdParameters.ConfigFile, "config", "", "config file with defaults")
+   flag.StringVar(&cmdParameters.ConfigFile, "config", "", "config file with defaults (configs/clusters.cfg by defaults)")
    flag.StringVar(&cmdParameters.MatchingPatterns, "mpatterns", "", "folder with matching patterns")
 
    flag.StringVar(&cmdParameters.ConfigsFilter, "configs", "*", "list of HDP configs to be compared")
@@ -41,8 +41,12 @@ func parse_arguments(){
       os.Exit(0)
    }
 
-
    cmdParameters.LogLevel = strings.ToLower(cmdParameters.LogLevel)
+
+   if cmdParameters.ConfigFile == "" {
+      cmdParameters.ConfigFile = "configs/clusters.cfg"
+      warning("--config option was missed. Trying to use default config: " + cmdParameters.ConfigFile)
+   }
 
    file, err := ioutil.ReadFile(cmdParameters.ConfigFile)
    if err != nil {
@@ -51,7 +55,7 @@ func parse_arguments(){
 
    var cl []Cluster
    if json.Unmarshal(file, &cl) != nil {
-      error("Cannot unmarshal cluster config file: ", cmdParameters.ConfigFile)
+      error("Cannot unmarshal cluster config file: " + cmdParameters.ConfigFile)
    }
 
    if cmdParameters.ClustersFilter != "*" {
@@ -74,15 +78,17 @@ func parse_arguments(){
 
 // ----------------------------------------------------------------------------------------------------------
 func init(){
+   cmdParameters.Action = os.Args[1]
    parse_arguments()
 }
+
 
 
 func main(){
 
    // TODO:
    // 
-   // 1. git diff between clusters
+   // 1. git diff between configs
    // 
    //        amc cdiff --clusters-list UAT,PROD --configs-list HDFS,HIVE       
    // 
@@ -97,6 +103,16 @@ func main(){
    // 4. ?
    // 
 
+
+   if cmdParameters.Action == "cdiff" {
+      info("Going to check difference between two clusters")
+   } else if cmdParameters.Action == "vdiff" {
+      info("Going to check difference between two versions")
+   } else if cmdParameters.Action == "log" {
+      info("Going to check how parameter was changed")
+   } else {
+      error("First argument should specify action")
+   }
 
    fmt.Println(cmdParameters)
 
