@@ -13,16 +13,16 @@ func log_init(){
 }
 
 
-func info(msg string){
-   log.Info(msg)
+func info(v ...interface{}){
+   log.Info(v)
 }
 
 
-func warning(msg string){
-   log.Warning(msg)
+func warning(v ...interface{}){
+   log.Warning(v)
 }
 
 
-func error(msg string){
-   log.Error(msg)
+func error(v ...interface{}){
+   log.Error(v)
 }

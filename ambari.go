@@ -5,11 +5,12 @@ import (
    "net/http"
    "crypto/tls"
    "io/ioutil"
+   "encoding/json"
 )
 
 
 // ------------------------------------------------------------------------------------------
-func request(cl Cluster, url string) ([]byte){
+func sendAmbariRequest(cl Cluster, url string) ([]byte){
    // log.Debug("sending request: ", cluster.AmbariUrl + url)
 
 
@@ -17,7 +18,7 @@ func request(cl Cluster, url string) ([]byte){
       TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
    }
 
-   req, _ := http.NewRequest("GET", cl.AmbariUrl + url, nil); 
+   req, _ := http.NewRequest("GET", cl.AmbariUrl + "/api/v1/clusters/" + cl.Name + url, nil); 
    req.SetBasicAuth(cl.AmbariUser, cl.AmbariPassword)
    req.Header.Set("X-Requested-By", "Ambari")
 
@@ -39,18 +40,41 @@ func request(cl Cluster, url string) ([]byte){
 
 
 // ------------------------------------------------------------------------------------------
-func get_configs(){
+func getClusterConfigs(cl Cluster) ([]Config){
+   info("cluster name: ", cl.Name)
+   var jsonData []byte
+   jsonData = sendAmbariRequest(cl, "?fields=Clusters/desired_configs")
+
+   var data map[string]interface{}
+   json.Unmarshal(jsonData, &data)
+   desiredConfigs := data["Clusters"].(map[string]interface{})["desired_configs"].(map[string]interface{})
+
+   return composeConfigList(desiredConfigs, cl.Name)
 }
 
 
 
 // ------------------------------------------------------------------------------------------
-func get_config_values(){
+func composeConfigList(data map[string]interface{}, clusterName string)([]Config){
+   var configs []Config;
+
+   for configName := range data {
+      cfg := &Config{Name: configName, ClusterName: clusterName}
+      fillStruct(data[configName].(map[string]interface{}), cfg)
+      configs = append(configs, *cfg)
+   }
+
+   return configs
 }
 
 
+// // ------------------------------------------------------------------------------------------
+// func get_config_values(){
+// }
 
-// ------------------------------------------------------------------------------------------
-func get_config_versions(){
-}
+
+
+// // ------------------------------------------------------------------------------------------
+// func get_config_versions(){
+// }
 

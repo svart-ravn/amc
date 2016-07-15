@@ -4,16 +4,20 @@ package main;
 import (
    "encoding/json"
    "io/ioutil"
+   "reflect"
+   "strings"
 )
 
 
 // ---------------------------------------------------------------------------
-type ConfigInfo struct{
+type Config struct{
    ClusterName string
+   Name string
    Tag string
    User string
    Version float64 
 }
+
 
 type Cluster struct{
    AmbariUrl string
@@ -24,6 +28,7 @@ type Cluster struct{
 
 
 
+// ---------------------------------------------------------------------------
 type CommandLineParameters struct{
    Action string  
    ConfigFile string
@@ -55,4 +60,16 @@ func readConfigFile(configFile string)([]Cluster){
    }
 
    return cl
+}
+
+
+
+// --------------------------------------------------------------------------------------------------------------
+func fillStruct(data map[string]interface{}, result interface{}){
+   t := reflect.ValueOf(result).Elem()
+   for k_lower, v := range data {
+      k := strings.Title(k_lower)
+      val := t.FieldByName(k)
+      val.Set(reflect.ValueOf(v))
+   }
 }
