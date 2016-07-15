@@ -8,12 +8,11 @@ import (
    "io/ioutil"
    "encoding/json"
    "time"
-
-   "fmt"
 )
 
 
 var cmdParameters = CommandLineParameters{LogLevel: "DEBUG", NoTimestamp: false};
+var clusterList []Cluster
 
 
 
@@ -53,21 +52,20 @@ func parse_arguments(){
       error("Error reading file: " + cmdParameters.ConfigFile)
    }
 
-   var cl []Cluster
-   if json.Unmarshal(file, &cl) != nil {
+   if json.Unmarshal(file, &clusterList) != nil {
       error("Cannot unmarshal cluster config file: " + cmdParameters.ConfigFile)
    }
 
    if cmdParameters.ClustersFilter != "*" {
       for _, v := range strings.Split(cmdParameters.ClustersFilter, ",") {
-         for _, cl := range cl {
+         for _, cl := range clusterList {
             if cl.Name == v {
                cmdParameters.Clusters = append(cmdParameters.Clusters, cl)
             }
          }
       }
    } else {
-      cmdParameters.Clusters = cl
+      cmdParameters.Clusters = clusterList
    }
 
    if ! cmdParameters.NoTimestamp && cmdParameters.OutputFolder != "" {
@@ -105,16 +103,15 @@ func main(){
 
 
    if cmdParameters.Action == "cdiff" {
-      info("Going to check difference between two clusters")
+      getDiffBetweenClusters()
    } else if cmdParameters.Action == "vdiff" {
       info("Going to check difference between two versions")
    } else if cmdParameters.Action == "log" {
       info("Going to check how parameter was changed")
    } else {
-      error("First argument should specify action")
+      error("First argument should specify action (cdiff, vdiff, log) while we have: " + cmdParameters.Action)
    }
 
-   fmt.Println(cmdParameters)
 
    info("Completed. OK!")
 }

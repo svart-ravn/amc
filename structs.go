@@ -1,10 +1,19 @@
 package main;
 
+
 import (
    "encoding/json"
    "io/ioutil"
 )
 
+
+// ---------------------------------------------------------------------------
+type ConfigInfo struct{
+   ClusterName string
+   Tag string
+   User string
+   Version float64 
+}
 
 type Cluster struct{
    AmbariUrl string
@@ -16,7 +25,7 @@ type Cluster struct{
 
 
 type CommandLineParameters struct{
-   Action string
+   Action string  
    ConfigFile string
    MatchingPatterns string
    OutputFolder string
