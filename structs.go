@@ -27,6 +27,11 @@ type Cluster struct{
 }
 
 
+type Property struct{
+   Field string
+   Value string
+}
+
 
 // ---------------------------------------------------------------------------
 type CommandLineParameters struct{

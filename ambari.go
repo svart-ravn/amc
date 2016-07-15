@@ -6,6 +6,7 @@ import (
    "crypto/tls"
    "io/ioutil"
    "encoding/json"
+   "fmt"
 )
 
 
@@ -55,6 +56,31 @@ func getClusterConfigs(cl Cluster) ([]Config){
 
 
 // ------------------------------------------------------------------------------------------
+func getConfigProperties(cfg Config, cl Cluster)([]Property){
+   var properties []Property
+
+
+   jsonData := sendAmbariRequest(cl, "/configurations?type=" + cfg.Name + "&tag=" + cfg.Tag)
+
+   var data map[string]interface{}
+   json.Unmarshal(jsonData, &data)
+
+   if len(data["items"].([]interface{})) == 0 {
+      warning("Seems there is no config", cfg.Name, " for this env...")
+      return properties
+   }
+
+   if data["items"].([]interface{})[0].(map[string]interface{})["properties"] != nil {
+      rawProps := data["items"].([]interface{})[0].(map[string]interface{})["properties"].(map[string]interface{})
+      properties = composePropertiesList(rawProps)
+   }
+
+
+   return properties
+}
+
+
+// ------------------------------------------------------------------------------------------
 func composeConfigList(data map[string]interface{}, clusterName string)([]Config){
    var configs []Config;
 
@@ -68,13 +94,16 @@ func composeConfigList(data map[string]interface{}, clusterName string)([]Config
 }
 
 
-// // ------------------------------------------------------------------------------------------
-// func get_config_values(){
-// }
 
+// -----------------------------------------------------------------------------------------------------------------------
+func composePropertiesList(data map[string]interface{})([]Property){
+   var result []Property
+   for key, value := range data{
+      v := fmt.Sprint(value)
 
+      result = append(result, Property{Field: key, Value: v})
 
-// // ------------------------------------------------------------------------------------------
-// func get_config_versions(){
-// }
+   }
 
+   return result
+}

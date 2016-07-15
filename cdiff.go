@@ -8,26 +8,23 @@ func getDiffBetweenClusters(){
    removeUnusedClusters()
 
    for _, cl := range clusterList {
-      info(getClusterConfigs(cl))
+      configs := getClusterConfigs(cl)
+
+      for _, cfg := range configs {
+         info(cfg)
+         info(getConfigProperties(cfg, cl))
+         info("-----------------------")
+      }
    }
 
-//    var configList []ConfigInfo
-//    for _, cl := range clusterList {
-//       configList = mergeConfigs(cl, configList)
-//    }
-
-//    for _, cfg := range configList {
-//       properties := getConfigProperties(cfg, clusterList)
-//       compareProperties(properties)
-//    }
 }
 
 
 
 // -----------------------------------------------------------------------------------
-func getConfigProperties(cfg Config, ){
+// func getConfigProperties(cfg Config, ){
 
-}
+// }
 
 
 // -----------------------------------------------------------------------------------
