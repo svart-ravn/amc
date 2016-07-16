@@ -12,8 +12,6 @@ import (
 
 
 var cmdParameters = CommandLineParameters{LogLevel: "DEBUG", NoTimestamp: false};
-var clusterList []Cluster
-
 
 
 // ----------------------------------------------------------------------------------------------------------
@@ -52,6 +50,7 @@ func parse_arguments(){
       error("Error reading file: " + cmdParameters.ConfigFile)
    }
 
+   var clusterList []Cluster
    if json.Unmarshal(file, &clusterList) != nil {
       error("Cannot unmarshal cluster config file: " + cmdParameters.ConfigFile)
    }
