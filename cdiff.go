@@ -56,15 +56,30 @@ func getDiffBetweenClusters(){
       }
    }
 
+   info(propertiesInfo)
+
    compareProperties(propertiesInfo)
 }
 
 
 // -----------------------------------------------------------------------------------
-func mergeProperties(propertiesInfo []PropertyInfo, properties []Property, ConfigName string, ClusterName string)([]PropertyInfo){
-   // for _, prop := range properties {
+func mergeProperties(propertiesInfo []PropertyInfo, properties []Property, configName string, clusterName string)([]PropertyInfo){
+   for _, prop := range properties {
+      index := -1
+      propValue := PropertyValue{ClusterName: clusterName, Value: prop.Value}
+      for i, propInfo := range propertiesInfo {
+         if propInfo.PropName == prop.Key && propInfo.ConfigName == configName {
+            propertiesInfo[i].Values = append(propertiesInfo[i].Values, propValue)
+            index = i
+            break
+         }
+      }
 
-   // }
+      if index == -1 {
+         v := PropertyInfo{ConfigName: configName, PropName: prop.Key, Values: []PropertyValue{propValue}}
+         propertiesInfo = append(propertiesInfo, v)
+      }
+   }
 
    return propertiesInfo
 }
