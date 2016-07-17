@@ -29,7 +29,7 @@ type Cluster struct{
 
 
 type Property struct{
-   Field string
+   Key string
    Value string
 }
 
@@ -79,4 +79,16 @@ func fillStruct(data map[string]interface{}, result interface{}){
       val := t.FieldByName(k)
       val.Set(reflect.ValueOf(v))
    }
+}
+
+
+// ----------------------------------------------------------------
+func getClusterByName(clusters []Cluster, name string)(Cluster){
+   for _, cl := range clusters{
+      if cl.Name == name {
+         return cl
+      }
+   }
+
+   return Cluster{}
 }

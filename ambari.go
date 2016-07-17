@@ -99,9 +99,10 @@ func composeConfigList(data map[string]interface{}, clusterName string)([]Config
 func composePropertiesList(data map[string]interface{})([]Property){
    var result []Property
    for key, value := range data{
+      // info(key, value)
       v := fmt.Sprint(value)
 
-      result = append(result, Property{Field: key, Value: v})
+      result = append(result, Property{Key: key, Value: v})
 
    }
 

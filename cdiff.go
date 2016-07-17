@@ -1,6 +1,11 @@
 package main;
 
 
+// import (
+//    "encoding/json"
+//    "fmt"
+// )
+
 
 type ConfigProperty struct{
    ClusterName string
@@ -10,63 +15,118 @@ type ConfigProperty struct{
 
 
 
-type ConfigInfo struct {
-   Name string
-   Configs []Config
+// type ConfigInfo struct {
+//    Name string
+//    Configs []Config
+// }
+
+
+// type PropertyInfo struct{
+//    Name string
+//    Properties []Property
+// }
+
+
+type PropertyValue struct{
+   ClusterName string
+   Value string
 }
+
+type PropertyInfo struct{
+   ConfigName string
+   PropName string
+   Values []PropertyValue
+}
+
 
 
 
 // -----------------------------------------------------------------------------------
 func getDiffBetweenClusters(){
 
-   var configs []ConfigInfo
+   // configsInfo := mergingConfigsIntoOnce()
+   var propertiesInfo []PropertyInfo
 
    for _, cl := range cmdParameters.Clusters {
-      tmp := getClusterConfigs(cl)
-      for _, cfg := range tmp {
-         index := -1
-         for i, config := range configs {
-            if config.Name == cfg.Name {
-               index = i
-               break
-            } 
-         }
-
-         if (index == -1){
-            configs = append(configs, ConfigInfo{Name: cfg.Name, Configs: []Config{cfg}})
-         } else {
-            configs[index].Configs = append(configs[index].Configs, cfg)
-         }
+      configs := getClusterConfigs(cl)
+      for _, cfg := range configs {
+         properties := getConfigProperties(cfg, cl)
+         // warning(properties)
+         propertiesInfo = mergeProperties(propertiesInfo, properties, cfg.Name, cl.Name)
       }
    }
 
-   // info("---------------------------------")
+   compareProperties(propertiesInfo)
+}
 
-   // for _, ci := range configs{
-   //    info(ci)
-   //    info("")
+
+// -----------------------------------------------------------------------------------
+func mergeProperties(propertiesInfo []PropertyInfo, properties []Property, ConfigName string, ClusterName string)([]PropertyInfo){
+   // for _, prop := range properties {
+
    // }
 
-   // removeUnusedClusters()
-
-   // var configs []Config
-
-   // for _, cl := range cmdParameters.Clusters {
-   //    tmp := getClusterConfigs(cl)
-
-   //    // info(configs)
-   //    // var ConfigProperties []ConfigProperty{ClusterName: cl.Name, ConfigName: }
-   //    // for _, cfg := range configs {
-   //    //    info(cfg)
-   //    //    info(getConfigProperties(cfg, cl))
-   //    //    info("-----------------------")
-   //    // }
-   // }
-
+   return propertiesInfo
 }
 
 
 
-// -----------------------------------------------------------------------------------
+func compareProperties(propertiesInfo []PropertyInfo) {
+   info("compare them finally")
+}
 
+// // -----------------------------------------------------------------------------------
+// func mergingConfigsIntoOnce() ([]ConfigInfo){
+//    var configsInfo []ConfigInfo
+
+//    for _, cl := range cmdParameters.Clusters {
+//       tmp := getClusterConfigs(cl)
+//       for _, cfg := range tmp {
+//          index := -1
+//          for i, config := range configsInfo {
+//             if config.Name == cfg.Name {
+//                index = i
+//                break
+//             } 
+//          }
+
+//          if (index == -1){
+//             configsInfo = append(configsInfo, ConfigInfo{Name: cfg.Name, Configs: []Config{cfg}})
+//          } else {
+//             configsInfo[index].Configs = append(configsInfo[index].Configs, cfg)
+//          }
+//       }
+//    }   
+
+//    return configsInfo
+// }
+
+
+// func getProperties(config Config)([]Property){
+//    var properties []Property
+
+//    for _, configInfo := range config.Info {
+//       jsonData := sendAmbariRequest(getClusterByName(clusters, config.ClusterName), "/api/v1/clusters/" + configInfo.ClusterName + "/configurations?type=" + config.Name + "&tag=" + configInfo.Tag)
+
+//       var data map[string]interface{}
+//       json.Unmarshal(jsonData, &data)
+
+//       if len(data["items"].([]interface{})) == 0 {
+//          log.Warning("Seems there is no config for this env...")
+//          continue
+//       }
+
+//       if data["items"].([]interface{})[0].(map[string]interface{})["properties"] != nil {
+//          rawProps := data["items"].([]interface{})[0].(map[string]interface{})["properties"].(map[string]interface{})
+//          properties = composePropertiesList(rawProps, properties, configInfo.ClusterName)
+//       }
+//    }
+
+//    return properties
+// }
+
+
+// // -----------------------------------------------------------------------------------
+// func compareConfigs(configs []Config){
+//    info(configs)
+// }
