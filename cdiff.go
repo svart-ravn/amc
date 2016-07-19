@@ -50,13 +50,12 @@ func getDiffBetweenClusters(){
    for _, cl := range cmdParameters.Clusters {
       configs := getClusterConfigs(cl)
       for _, cfg := range configs {
+         info(cfg)
          properties := getConfigProperties(cfg, cl)
          // warning(properties)
          propertiesInfo = mergeProperties(propertiesInfo, properties, cfg.Name, cl.Name)
       }
    }
-
-   info(propertiesInfo)
 
    compareProperties(propertiesInfo)
 }
@@ -88,7 +87,44 @@ func mergeProperties(propertiesInfo []PropertyInfo, properties []Property, confi
 
 func compareProperties(propertiesInfo []PropertyInfo) {
    info("compare them finally")
+//    amountOfClusters := len(cmdParameters.Clusters)
+
+// // func processingProperties(properties []Property, amountOfClusters int, config Config){
+//    var matchedPatterns []Patterns
+
+//    matchedPatterns = uploadMatchingFolder("_default_", matchedPatterns)
+//    // matchedPatterns = uploadMatchingFolder(config.Name, matchedPatterns)
+
+//    ignoredPatterns := uploadListFromFile("_ignores_")
+//    warning("ignorant properties: ", ignoredPatterns)
+//    warning("matching patterns: ", matchedPatterns)
+
+//    for _, propInfo := range propertiesInfo {
+//       if tryToFindIgnoredPatterns(propInfo.Name, ignoredPatterns) {
+//          log.Debug("Ignoring property: ", propInfo.Name)
+//          continue
+//       }
+
+//       // if strings.Contains(propInfo.Info[0].Value, "\n") && input.CompareConfigProps == false {
+//       //    log.Debug("Skipping config property: ", propInfo.Name)
+//       //    continue
+//       // }
+
+
+//       // hasTheSameValues := tryToFndTheDifference(propInfo, matchedPatterns)
+
+//       // if amountOfClusters != len(propInfo.Info) {
+//       //    if input.NoLackOfData == false {
+//       //       outputPropertyDiff("[LACK OF DATA] ", propInfo, config.Name)
+//       //    }
+//       // } else if !hasTheSameValues {
+//       //    outputPropertyDiff("[NOT THE SAME] ", propInfo, config.Name)
+//       // }
+
+//    }
 }
+
+
 
 // // -----------------------------------------------------------------------------------
 // func mergingConfigsIntoOnce() ([]ConfigInfo){

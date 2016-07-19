@@ -16,7 +16,10 @@ var cmdParameters = CommandLineParameters{LogLevel: "DEBUG", NoTimestamp: false}
 
 // ----------------------------------------------------------------------------------------------------------
 func parse_arguments(){
-   flag.StringVar(&cmdParameters.LogLevel, "log-level", "INFO", "log level")
+   info(cmdParameters)
+
+
+   flag.StringVar(&cmdParameters.LogLevel, "log-level", "WARN", "log level")
    flag.BoolVar(&cmdParameters.ToConsole, "console", false, "output to console")
    flag.StringVar(&cmdParameters.OutputFolder, "output", "", "output folder")
    flag.BoolVar(&cmdParameters.NoTimestamp, "no-timestamp", false, "skip timestamp in folder name")
@@ -24,14 +27,17 @@ func parse_arguments(){
    flag.BoolVar(&cmdParameters.CompareConfigProps, "compare-config-props", false, "compare configs, i.e. multiline properties")
 
    flag.StringVar(&cmdParameters.ClustersFilter, "clusters", "*", "list of clusters")
+   flag.StringVar(&cmdParameters.ConfigsFilter, "configs", "*", "list of HDP configs to be compared")
 
    flag.StringVar(&cmdParameters.ConfigFile, "config", "", "config file with defaults (configs/clusters.cfg by defaults)")
    flag.StringVar(&cmdParameters.MatchingPatterns, "mpatterns", "", "folder with matching patterns")
 
-   flag.StringVar(&cmdParameters.ConfigsFilter, "configs", "*", "list of HDP configs to be compared")
-
    var ShowHelp = flag.Bool("help", false, "show help")
+
    flag.Parse()
+
+   info(cmdParameters)
+   info(*ShowHelp)
 
    if *ShowHelp == true {
       flag.PrintDefaults()
@@ -76,6 +82,8 @@ func parse_arguments(){
 // ----------------------------------------------------------------------------------------------------------
 func init(){
    cmdParameters.Action = os.Args[1]
+   os.Args = append(os.Args[:1], os.Args[2:]...)
+
    parse_arguments()
 }
 
@@ -113,4 +121,5 @@ func main(){
 
 
    info("Completed. OK!")
+   info(cmdParameters)
 }

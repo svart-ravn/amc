@@ -7,6 +7,7 @@ import (
    "io/ioutil"
    "encoding/json"
    "fmt"
+   "strings"
 )
 
 
@@ -85,9 +86,12 @@ func composeConfigList(data map[string]interface{}, clusterName string)([]Config
    var configs []Config;
 
    for configName := range data {
-      cfg := &Config{Name: configName, ClusterName: clusterName}
-      fillStruct(data[configName].(map[string]interface{}), cfg)
-      configs = append(configs, *cfg)
+      if strings.Contains("," + cmdParameters.ConfigsFilter + ",", "," + configName + ",") || cmdParameters.ConfigsFilter == "*" {
+         warning("=", cmdParameters.ConfigsFilter,  " ::", configName)         
+         cfg := &Config{Name: configName, ClusterName: clusterName}
+         fillStruct(data[configName].(map[string]interface{}), cfg)
+         configs = append(configs, *cfg)
+      }
    }
 
    return configs

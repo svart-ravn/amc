@@ -6,6 +6,8 @@ import (
    "io/ioutil"
    "reflect"
    "strings"
+   "os"
+   "bufio"
 )
 
 
@@ -54,6 +56,15 @@ type CommandLineParameters struct{
 
 
 
+// ---------------------------------------------------------------------------
+type Patterns struct{
+   ReplaceWith string
+   What []string
+}
+
+
+
+
 // --------------------------------------------------------------------------------------------------------------
 func readConfigFile(configFile string)([]Cluster){
    file, err := ioutil.ReadFile(configFile)
@@ -91,4 +102,38 @@ func getClusterByName(clusters []Cluster, name string)(Cluster){
    }
 
    return Cluster{}
+}
+
+
+
+// ------------------------------------------------------------------------------
+func uploadMatchingFolder(filename string, matchedPatterns []Patterns) ([]Patterns){
+   if file, err := os.Open("configs/" + filename); err == nil {
+      defer file.Close()
+
+      scanner := bufio.NewScanner(file)
+      for scanner.Scan() {
+         data := strings.Split(scanner.Text(), "=")
+         matchedPatterns = append(matchedPatterns, Patterns{data[0], strings.Split(data[1], ",")})
+      }     
+   }
+
+   return matchedPatterns
+}
+
+
+
+// ------------------------------------------------------------------------------
+func uploadListFromFile(filename string) []string{
+   result := make([]string, 0)
+   if file, err := os.Open("configs/" + filename); err == nil {
+      defer file.Close()
+
+      scanner := bufio.NewScanner(file)
+      for scanner.Scan() {
+         result = append(result, scanner.Text())
+      }     
+   }
+
+   return result
 }
