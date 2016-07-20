@@ -87,13 +87,37 @@ func mergeProperties(propertiesInfo []PropertyInfo, properties []Property, confi
 
 func compareProperties(propertiesInfo []PropertyInfo) {
    info("compare them finally")
-//    amountOfClusters := len(cmdParameters.Clusters)
+   amountOfClusters := len(cmdParameters.Clusters)
 
 // // func processingProperties(properties []Property, amountOfClusters int, config Config){
-//    var matchedPatterns []Patterns
+   var matchedPatterns []Patterns
+   ignoredPatterns := uploadListFromFile("_ignores_")
 
-//    matchedPatterns = uploadMatchingFolder("_default_", matchedPatterns)
-//    // matchedPatterns = uploadMatchingFolder(config.Name, matchedPatterns)
+   configName := ""
+   for _, propsInfo := range propertiesInfo {
+      if propsInfo.ConfigName != configName {
+         configName propsInfo.ConfigName
+         matchedPatterns = nil
+         matchedPatterns = uploadMatchingFolder("_default_", matchedPatterns)
+         matchedPatterns = uploadMatchingFolder(configName, matchedPatterns)
+      }
+
+      // ignored props
+      if tryToFindIgnoredPatterns(propInfo.PropName, ignoredPatterns) {
+         debug("Ignoring property: ", propInfo.PropName)
+         continue
+      }
+
+      // skipping comments if required
+      if strings.Contains(propInfo.Values[0].Value, "\n") && cmdParameters.CompareConfigProps == false {
+         debug("Skipping config property: ", propInfo.PropName)
+         continue
+      }
+
+      hasTheSameValues := tryToFndTheDifference(propInfo, matchedPatterns)
+
+
+   }
 
 //    ignoredPatterns := uploadListFromFile("_ignores_")
 //    warning("ignorant properties: ", ignoredPatterns)

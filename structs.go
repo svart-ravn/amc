@@ -108,7 +108,7 @@ func getClusterByName(clusters []Cluster, name string)(Cluster){
 
 // ------------------------------------------------------------------------------
 func uploadMatchingFolder(filename string, matchedPatterns []Patterns) ([]Patterns){
-   if file, err := os.Open("configs/" + filename); err == nil {
+   if file, err := os.Open("configs/patterns/" + filename); err == nil {
       defer file.Close()
 
       scanner := bufio.NewScanner(file)
