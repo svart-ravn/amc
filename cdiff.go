@@ -50,6 +50,7 @@ func getDiffBetweenClusters(){
 
    for _, cl := range cmdParameters.Clusters {
       configs := getClusterConfigs(cl)
+      warning("configs: ", configs)
       for _, cfg := range configs {
          info(cfg)
          properties := getConfigProperties(cfg, cl)
@@ -87,7 +88,7 @@ func mergeProperties(propertiesInfo []PropertyInfo, properties []Property, confi
 
 
 func compareProperties(propertiesInfo []PropertyInfo) {
-   info("compare them finally")
+   // info("compare them finally")
    // amountOfClusters := len(cmdParameters.Clusters)
 
 // // func processingProperties(properties []Property, amountOfClusters int, config Config){
@@ -128,12 +129,20 @@ func compareProperties(propertiesInfo []PropertyInfo) {
 
 
 func tryToFindIgnoredPatterns(propName string, ignoredPatterns []string) (bool){
+   for _, v := range ignoredPatterns {
+      if v == propName {
+         return true
+      }
+   }
    return false
 }
 
 
 
-func tryToFndTheDifference(propInfo PropertyInfo, matchedPatterns []Patterns) (bool){
+func tryToFndTheDifference(propsInfo PropertyInfo, matchedPatterns []Patterns) (bool){
+   // for _, v := propsInfo {
+      
+   // }
    return true
 }
 

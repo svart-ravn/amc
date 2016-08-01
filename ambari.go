@@ -87,7 +87,6 @@ func composeConfigList(data map[string]interface{}, clusterName string)([]Config
 
    for configName := range data {
       if strings.Contains("," + cmdParameters.ConfigsFilter + ",", "," + configName + ",") || cmdParameters.ConfigsFilter == "*" {
-         warning("=", cmdParameters.ConfigsFilter,  " ::", configName)         
          cfg := &Config{Name: configName, ClusterName: clusterName}
          fillStruct(data[configName].(map[string]interface{}), cfg)
          configs = append(configs, *cfg)

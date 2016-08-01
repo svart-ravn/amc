@@ -126,7 +126,7 @@ func uploadMatchingFolder(filename string, matchedPatterns []Patterns) ([]Patter
 // ------------------------------------------------------------------------------
 func uploadListFromFile(filename string) []string{
    result := make([]string, 0)
-   if file, err := os.Open("configs/" + filename); err == nil {
+   if file, err := os.Open("configs/patterns/" + filename); err == nil {
       defer file.Close()
 
       scanner := bufio.NewScanner(file)
