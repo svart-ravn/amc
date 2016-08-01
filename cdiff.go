@@ -1,10 +1,11 @@
 package main;
 
 
-// import (
+import (
+   "strings"
 //    "encoding/json"
 //    "fmt"
-// )
+)
 
 
 type ConfigProperty struct{
@@ -87,7 +88,7 @@ func mergeProperties(propertiesInfo []PropertyInfo, properties []Property, confi
 
 func compareProperties(propertiesInfo []PropertyInfo) {
    info("compare them finally")
-   amountOfClusters := len(cmdParameters.Clusters)
+   // amountOfClusters := len(cmdParameters.Clusters)
 
 // // func processingProperties(properties []Property, amountOfClusters int, config Config){
    var matchedPatterns []Patterns
@@ -96,28 +97,45 @@ func compareProperties(propertiesInfo []PropertyInfo) {
    configName := ""
    for _, propsInfo := range propertiesInfo {
       if propsInfo.ConfigName != configName {
-         configName propsInfo.ConfigName
+         configName = propsInfo.ConfigName
          matchedPatterns = nil
          matchedPatterns = uploadMatchingFolder("_default_", matchedPatterns)
          matchedPatterns = uploadMatchingFolder(configName, matchedPatterns)
       }
 
       // ignored props
-      if tryToFindIgnoredPatterns(propInfo.PropName, ignoredPatterns) {
-         debug("Ignoring property: ", propInfo.PropName)
+      if tryToFindIgnoredPatterns(propsInfo.PropName, ignoredPatterns) {
+         debug("Ignoring property: ", propsInfo.PropName)
          continue
       }
 
       // skipping comments if required
-      if strings.Contains(propInfo.Values[0].Value, "\n") && cmdParameters.CompareConfigProps == false {
-         debug("Skipping config property: ", propInfo.PropName)
+      if strings.Contains(propsInfo.Values[0].Value, "\n") && cmdParameters.CompareConfigProps == false {
+         debug("Skipping config property: ", propsInfo.PropName)
          continue
       }
 
-      hasTheSameValues := tryToFndTheDifference(propInfo, matchedPatterns)
+      hasTheSameValues := tryToFndTheDifference(propsInfo, matchedPatterns)
 
-
+      if hasTheSameValues {
+         info(propsInfo)
+      } else {
+         error(propsInfo)
+      }
    }
+}
+
+
+
+func tryToFindIgnoredPatterns(propName string, ignoredPatterns []string) (bool){
+   return false
+}
+
+
+
+func tryToFndTheDifference(propInfo PropertyInfo, matchedPatterns []Patterns) (bool){
+   return true
+}
 
 //    ignoredPatterns := uploadListFromFile("_ignores_")
 //    warning("ignorant properties: ", ignoredPatterns)
@@ -146,7 +164,6 @@ func compareProperties(propertiesInfo []PropertyInfo) {
 //       // }
 
 //    }
-}
 
 
 

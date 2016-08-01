@@ -13,6 +13,11 @@ func log_init(){
 }
 
 
+func debug(v ...interface{}){
+   log.Debug(v)
+}
+
+
 func info(v ...interface{}){
    log.Info(v)
 }
