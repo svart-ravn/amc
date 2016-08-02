@@ -140,11 +140,35 @@ func tryToFindIgnoredPatterns(propName string, ignoredPatterns []string) (bool){
 
 
 func tryToFndTheDifference(propsInfo PropertyInfo, matchedPatterns []Patterns) (bool){
-   // for _, v := propsInfo {
-      
-   // }
-   return true
+   hasTheSameValues := true
+
+   var standard string
+   for ind, v := range propsInfo.Values {
+      value := applyMatchedPatterns(v.Value, matchedPatterns, ind)
+      if standard == "" {
+         standard = value
+      } else{
+         if standard != value {
+            hasTheSameValues = false
+            break
+         }
+      }
+
+
+   }
+
+   return hasTheSameValues
 }
+
+
+func applyMatchedPatterns(value string, matchedPatterns []Patterns, ind int) (string){
+   if strings.Contains(value, "0") && ind % 2 == 1 {
+      return "xzy"
+   } else {
+      return value
+   }
+}
+
 
 //    ignoredPatterns := uploadListFromFile("_ignores_")
 //    warning("ignorant properties: ", ignoredPatterns)
