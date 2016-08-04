@@ -100,7 +100,7 @@ func compareProperties(propertiesInfo []PropertyInfo) {
       if propsInfo.ConfigName != configName {
          configName = propsInfo.ConfigName
          matchedPatterns = nil
-         matchedPatterns = uploadMatchingFolder("_default_", matchedPatterns)
+         matchedPatterns = uploadMatchingFolder("_defaults_", matchedPatterns)
          matchedPatterns = uploadMatchingFolder(configName, matchedPatterns)
       }
 
@@ -116,12 +116,16 @@ func compareProperties(propertiesInfo []PropertyInfo) {
          continue
       }
 
-      hasTheSameValues := tryToFndTheDifference(propsInfo, matchedPatterns)
-
-      if hasTheSameValues {
-         info(propsInfo)
+      if (! cmdParameters.NoLackOfData) && (len(propsInfo.Values) == len(cmdParameters.Clusters) ){
+         warning("lack of data: ", propsInfo)
       } else {
-         error(propsInfo)
+         hasTheSameValues := tryToFndTheDifference(propsInfo, matchedPatterns)
+
+         if hasTheSameValues {
+            info(propsInfo)
+         } else {
+            error(propsInfo)
+         }
       }
    }
 }
@@ -162,6 +166,13 @@ func tryToFndTheDifference(propsInfo PropertyInfo, matchedPatterns []Patterns) (
 
 
 func applyMatchedPatterns(value string, matchedPatterns []Patterns, ind int) (string){
+
+   for _, pattern := range matchedPatterns{
+      for _,v := range pattern.What {
+         value = strings.Replace(value, v, pattern.ReplaceWith, -1)
+      }
+   }
+
    if strings.Contains(value, "0") && ind % 2 == 1 {
       return "xzy"
    } else {
