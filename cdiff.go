@@ -3,8 +3,6 @@ package main;
 
 import (
    "strings"
-//    "encoding/json"
-//    "fmt"
 )
 
 
@@ -14,18 +12,6 @@ type ConfigProperty struct{
    Properties []Property
 }
 
-
-
-// type ConfigInfo struct {
-//    Name string
-//    Configs []Config
-// }
-
-
-// type PropertyInfo struct{
-//    Name string
-//    Properties []Property
-// }
 
 
 type PropertyValue struct{
@@ -45,7 +31,6 @@ type PropertyInfo struct{
 // -----------------------------------------------------------------------------------
 func getDiffBetweenClusters(){
 
-   // configsInfo := mergingConfigsIntoOnce()
    var propertiesInfo []PropertyInfo
 
    for _, cl := range cmdParameters.Clusters {
@@ -88,10 +73,6 @@ func mergeProperties(propertiesInfo []PropertyInfo, properties []Property, confi
 
 
 func compareProperties(propertiesInfo []PropertyInfo) {
-   // info("compare them finally")
-   // amountOfClusters := len(cmdParameters.Clusters)
-
-// // func processingProperties(properties []Property, amountOfClusters int, config Config){
    var matchedPatterns []Patterns
    ignoredPatterns := uploadListFromFile("_ignores_")
 
@@ -116,7 +97,7 @@ func compareProperties(propertiesInfo []PropertyInfo) {
          continue
       }
 
-      if (! cmdParameters.NoLackOfData) && (len(propsInfo.Values) == len(cmdParameters.Clusters) ){
+      if ! cmdParameters.NoLackOfData && (len(propsInfo.Values) != len(cmdParameters.Clusters) ){
          warning("lack of data: ", propsInfo)
       } else {
          hasTheSameValues := tryToFndTheDifference(propsInfo, matchedPatterns)
@@ -179,90 +160,3 @@ func applyMatchedPatterns(value string, matchedPatterns []Patterns, ind int) (st
       return value
    }
 }
-
-
-//    ignoredPatterns := uploadListFromFile("_ignores_")
-//    warning("ignorant properties: ", ignoredPatterns)
-//    warning("matching patterns: ", matchedPatterns)
-
-//    for _, propInfo := range propertiesInfo {
-//       if tryToFindIgnoredPatterns(propInfo.Name, ignoredPatterns) {
-//          log.Debug("Ignoring property: ", propInfo.Name)
-//          continue
-//       }
-
-//       // if strings.Contains(propInfo.Info[0].Value, "\n") && input.CompareConfigProps == false {
-//       //    log.Debug("Skipping config property: ", propInfo.Name)
-//       //    continue
-//       // }
-
-
-//       // hasTheSameValues := tryToFndTheDifference(propInfo, matchedPatterns)
-
-//       // if amountOfClusters != len(propInfo.Info) {
-//       //    if input.NoLackOfData == false {
-//       //       outputPropertyDiff("[LACK OF DATA] ", propInfo, config.Name)
-//       //    }
-//       // } else if !hasTheSameValues {
-//       //    outputPropertyDiff("[NOT THE SAME] ", propInfo, config.Name)
-//       // }
-
-//    }
-
-
-
-// // -----------------------------------------------------------------------------------
-// func mergingConfigsIntoOnce() ([]ConfigInfo){
-//    var configsInfo []ConfigInfo
-
-//    for _, cl := range cmdParameters.Clusters {
-//       tmp := getClusterConfigs(cl)
-//       for _, cfg := range tmp {
-//          index := -1
-//          for i, config := range configsInfo {
-//             if config.Name == cfg.Name {
-//                index = i
-//                break
-//             } 
-//          }
-
-//          if (index == -1){
-//             configsInfo = append(configsInfo, ConfigInfo{Name: cfg.Name, Configs: []Config{cfg}})
-//          } else {
-//             configsInfo[index].Configs = append(configsInfo[index].Configs, cfg)
-//          }
-//       }
-//    }   
-
-//    return configsInfo
-// }
-
-
-// func getProperties(config Config)([]Property){
-//    var properties []Property
-
-//    for _, configInfo := range config.Info {
-//       jsonData := sendAmbariRequest(getClusterByName(clusters, config.ClusterName), "/api/v1/clusters/" + configInfo.ClusterName + "/configurations?type=" + config.Name + "&tag=" + configInfo.Tag)
-
-//       var data map[string]interface{}
-//       json.Unmarshal(jsonData, &data)
-
-//       if len(data["items"].([]interface{})) == 0 {
-//          log.Warning("Seems there is no config for this env...")
-//          continue
-//       }
-
-//       if data["items"].([]interface{})[0].(map[string]interface{})["properties"] != nil {
-//          rawProps := data["items"].([]interface{})[0].(map[string]interface{})["properties"].(map[string]interface{})
-//          properties = composePropertiesList(rawProps, properties, configInfo.ClusterName)
-//       }
-//    }
-
-//    return properties
-// }
-
-
-// // -----------------------------------------------------------------------------------
-// func compareConfigs(configs []Config){
-//    info(configs)
-// }
