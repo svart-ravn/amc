@@ -154,9 +154,10 @@ func applyMatchedPatterns(value string, matchedPatterns []Patterns, ind int) (st
       }
    }
 
-   if strings.Contains(value, "0") && ind % 2 == 1 {
-      return "xzy"
-   } else {
-      return value
-   }
+   // debug
+   // if strings.Contains(value, "0") && ind % 2 == 1 {
+   //    return "xzy"
+   // } else {
+   return value
+   // }
 }
